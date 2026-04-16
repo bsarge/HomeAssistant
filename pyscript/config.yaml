@@ -1,0 +1,5 @@
+allow_all_imports: true
+apps:
+  my_app1:
+    # any settings for my_app1 go here
+  my_app2:

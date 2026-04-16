@@ -1,0 +1,50 @@
+cat > /config/.gitignore << 'EOF'
+# Secrets and sensitive data
+secrets.yaml
+ip_bans.yaml
+known_devices.yaml
+
+# HA internal storage
+.storage/
+.cloud/
+.google.token
+.aarlo/
+
+# HA files
+.HA_VERSION
+.ha_run.lock
+
+# Cache
+.cache/
+
+# Logs
+*.log
+*.log.fault
+*.log.1
+*.log.old
+OZW_Log.txt
+
+# Database
+home-assistant_v2.db
+home-assistant_v2.db-shm
+home-assistant_v2.db-wal
+
+# Python virtual environment
+venv/
+deps/
+__pycache__/
+
+# HACS
+custom_components/
+
+# Node
+node_modules/
+
+# Misc
+.DS_Store
+._*
+.nfs*
+.Trash-0/
+*.sav
+status.txt
+EOF

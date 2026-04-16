@@ -1,0 +1,4 @@
+start_church:
+  alias: "Start Church Script"
+  sequence:
+    - service: pyscript.play_church_on_roku

@@ -1,0 +1,94 @@
+- id: '1743079221742'
+  alias: Trigger Church Video on Roku
+  description: ''
+  triggers:
+  - entity_id:
+    - input_boolean.start_church_on_roku
+    to: 'on'
+    trigger: state
+  actions:
+  - action: pyscript.play_church_on_roku
+    data: {}
+  - delay: 00:00:05
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.start_church_on_roku
+- id: '1755960154372'
+  alias: Turn off bedroom light if it comes on withing 5 minutes of sunrise
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - switch.bedroom
+    to: 'on'
+  conditions:
+  - condition: template
+    value_template: "{% set cdt = now() %} {% set ct = cdt.hour * 3600 + cdt.minute
+      * 60 + cdt.second %} {% set srdt = as_datetime(state_attr('sun.sun', 'next_rising'))
+      | as_local %} {% set srt = srdt.hour * 3600 + srdt.minute * 60 + srdt.second
+      %}  {% set diff = (ct - srt) | abs %} {{ diff < 300 }} \n"
+  actions:
+  - target:
+      entity_id: switch.bedroom
+    action: switch.turn_off
+    data: {}
+  - data:
+      message: 'bedroom switch turned off
+
+        '
+    action: system_log.write
+  mode: single
+- id: test_template_execution
+  alias: Test Template Execution
+  description: ''
+  triggers:
+  - event_type: test_template_event
+    trigger: event
+  conditions: []
+  actions:
+  - variables:
+      sunrise: '{{ now.replace(hour=7, minute=45, second=0) }}'
+      diff: '{{ (now - sunrise).total_seconds() | abs }}'
+  - data:
+      message: 'Testing template: Current time: {{ now }} Simulated sunrise: {{ sunrise
+        }} Time difference: {{ diff }} seconds Within ±5 minutes of sunrise? {{ diff
+        <= 300 }}
+
+        '
+      level: info
+    action: system_log.write
+  mode: single
+- id: '1758138493032'
+  alias: test vars
+  description: ''
+  triggers:
+  - trigger: event
+    event_type: 'test_template_event '
+  conditions:
+  - condition: template
+    value_template: "{% set current_time = now() %} {% set sunrise = as_datetime(state_attr('sun.sun',
+      'next_rising')) %}   {% set diff = (current_time - sunrise).total_seconds()
+      | abs %} {{ diff > 300 }}        \n"
+  actions:
+  - target:
+      entity_id: switch.bedroom
+    action: switch.turn_off
+  - data:
+      message: 'bedroom switch turned off
+
+        '
+    action: system_log.write
+  mode: single
+- id: '1758138493033'
+  alias: test arlo event
+  description: ''
+  triggers:
+  - trigger: event
+    event_type: aarlo_capture_updated
+  actions:
+  - target:
+      entity_id: switch.office
+    action: switch.turn_off
+  mode: single
