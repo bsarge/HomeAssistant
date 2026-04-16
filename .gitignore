@@ -1,4 +1,3 @@
-cat > /config/.gitignore << 'EOF'
 # Secrets and sensitive data
 secrets.yaml
 ip_bans.yaml
