@@ -1,6 +1,21 @@
 # Overview
 
-The goal of this project was to provide a way for my mother, who is 94 and blind, to listen to the church's service from her home. The service is streamed every Sunday morning using a live YouTube channel. The URL changes each week so I was not able to use a simple Alexa routine to start YouTube with a static URL. This project uses AWS to call into my Home Assistant server which executes a python script that scrapes the church's website for the YouTube URL, parses the vidio ID from the URL, turns on Roku and launches YouTube with the church's live vidio ID.
+The goal of this project was to provide a way for my mother, who is 94 and blind, to listen to the church's service from her home. The service is streamed every Sunday morning using a live YouTube channel. The URL changes each week so I was not able to use a simple Alexa routine to start YouTube with a static URL. I initially setup a laptop with a link to the page with the live YouTube channel but she found it difficult to use. I came up with a solution that lets her say "Alexa Start Church" which turns on her TV and sends a command to her Roku to open YouTube and play the live stream.
+
+# The journey
+
+When I found Mike Grant's Haaska Home Assistant integration with Alexa I realized I could write a custom Alexa skill that calls Home Assistant. I wrote a python script that scrapes the church's website for the URL and sends a command to Roku to start the video. Once that was working it was just a matter of getting the Haaska integration to trigger the script. This was accomplished by using an input_boolean and an automation triggered when the intput_boolean was turned on and executes the python script.
+
+# Design summary
+
+- A custom AWS Alexa skill calls the Home Assistant server.
+- The HA Haaska integration turns on an input_boolean which generates an event.
+- Automation triggerend on the event executes a python script.
+- The scrpt:
+  - Scrapes the church's website for the YouTube URL
+  - Parses the vidio ID from the URL
+  - Turns on Roku
+  - Launches YouTube with the church's live vidio ID.
 
 
 # Automation
@@ -23,7 +38,7 @@ The goal of this project was to provide a way for my mother, who is 94 and blind
 
 # Implementation
 
-This is my recommended approach to implementing "Start Church". It builds and tests each componenet step=by=step. 
+This is a recommended approach to implementing "Start Church". It builds and tests each componenet step=by=step. 
 
 ## 1. Install PyScript on Home Assistant
 https://github.com/custom-components/pyscript
@@ -164,5 +179,3 @@ alexa:
       include_entities:
         - input_boolean.start_church_on_roku
 ```
-
-
